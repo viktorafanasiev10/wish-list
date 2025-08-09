@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "933408528973",
+    "project_id": "wish-list-5a69a",
+    "storage_bucket": "wish-list-5a69a.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:933408528973:android:1ff3ef833a769bbfc79a04",
+        "android_client_info": {
+          "package_name": "com.afanasiev.wishlist"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "933408528973-0mqvemnt4723q7cdmn9lt5ni6be18j9q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCagHQkiKvNPhZ57j7QuMU2Dt_L50jaH5U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "933408528973-0mqvemnt4723q7cdmn9lt5ni6be18j9q.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
