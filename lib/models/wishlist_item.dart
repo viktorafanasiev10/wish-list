@@ -13,13 +13,13 @@ class WishlistItem {
   final String? notes;
   final String? categoryId;
 
-  final double? price;       // optional
-  final String? currency;    // e.g., "EUR"
+  final double? price; // optional
+  final String? currency; // e.g., "EUR"
 
-  final int quantity;        // desired amount
+  final int quantity; // desired amount
   final ItemPriority priority;
 
-  final bool purchased;      // marked purchased (by anyone)
+  final bool purchased; // marked purchased (by anyone)
   final UID? purchasedBy;
   final int? purchasedAtMs;
 
@@ -70,7 +70,10 @@ class WishlistItem {
     'archived': archived,
   };
 
-  factory WishlistItem.fromMap(DocID id, Map<String, dynamic> m) => WishlistItem(
+  factory WishlistItem.fromMap(
+    DocID id,
+    Map<String, dynamic> m,
+  ) => WishlistItem(
     id: id,
     listId: m['listId'] as String,
     name: m['name'] as String,
@@ -85,9 +88,10 @@ class WishlistItem {
     purchased: (m['purchased'] as bool?) ?? false,
     purchasedBy: m['purchasedBy'] as String?,
     purchasedAtMs: (m['purchasedAtMs'] as num?)?.toInt(),
-    reservations: (m['reservations'] as List? ?? [])
-        .map((x) => ItemReservation.fromMap(Map<String, dynamic>.from(x)))
-        .toList(),
+    reservations:
+        (m['reservations'] as List? ?? [])
+            .map((x) => ItemReservation.fromMap(Map<String, dynamic>.from(x)))
+            .toList(),
     createdAtMs: (m['createdAtMs'] as num).toInt(),
     updatedAtMs: (m['updatedAtMs'] as num).toInt(),
     archived: (m['archived'] as bool?) ?? false,

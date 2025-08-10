@@ -15,9 +15,9 @@ class Wishlist {
 
   // optional: pending invites tracked separately (email or uid)
   final List<String> pendingInviteEmails; // emails not yet linked to a uid
-  final List<UID> pendingInviteUids;      // uids that haven’t accepted yet
+  final List<UID> pendingInviteUids; // uids that haven’t accepted yet
 
-  final String? shareCode;   // short code for link-based join
+  final String? shareCode; // short code for link-based join
   final bool autoAcceptLinkJoins; // true: link joiners become viewers directly
 
   final int createdAtMs;
@@ -60,12 +60,17 @@ class Wishlist {
     name: m['name'] as String,
     description: m['description'] as String?,
     ownerId: m['ownerId'] as String,
-    visibility: WishlistVisibility.values.firstWhere((e) => e.name == m['visibility']),
-    members: (m['members'] as Map<String, dynamic>? ?? {}).map(
-          (k, v) => MapEntry(k, WishlistMember.fromMap(Map<String, dynamic>.from(v))),
+    visibility: WishlistVisibility.values.firstWhere(
+      (e) => e.name == m['visibility'],
     ),
-    pendingInviteEmails: (m['pendingInviteEmails'] as List?)?.cast<String>() ?? const [],
-    pendingInviteUids: (m['pendingInviteUids'] as List?)?.cast<String>() ?? const [],
+    members: (m['members'] as Map<String, dynamic>? ?? {}).map(
+      (k, v) =>
+          MapEntry(k, WishlistMember.fromMap(Map<String, dynamic>.from(v))),
+    ),
+    pendingInviteEmails:
+        (m['pendingInviteEmails'] as List?)?.cast<String>() ?? const [],
+    pendingInviteUids:
+        (m['pendingInviteUids'] as List?)?.cast<String>() ?? const [],
     shareCode: m['shareCode'] as String?,
     autoAcceptLinkJoins: (m['autoAcceptLinkJoins'] as bool?) ?? true,
     createdAtMs: (m['createdAtMs'] as num).toInt(),

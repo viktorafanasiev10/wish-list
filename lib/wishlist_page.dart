@@ -7,8 +7,8 @@ import 'widgets/wishlist_form.dart';
 
 class WishlistPage extends StatelessWidget {
   final String listId;
-  final String? listName;          // optional hint from caller
-  final String? currentUserEmail;  // optional, not used yet
+  final String? listName; // optional hint from caller
+  final String? currentUserEmail; // optional, not used yet
 
   const WishlistPage({
     super.key,
@@ -29,7 +29,9 @@ class WishlistPage extends StatelessWidget {
       builder: (context, snap) {
         // Basic loading/error states
         if (snap.connectionState == ConnectionState.waiting) {
-          return const Scaffold(body: Center(child: CircularProgressIndicator()));
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
         }
         if (!snap.hasData || !snap.data!.exists) {
           return Scaffold(
@@ -42,7 +44,8 @@ class WishlistPage extends StatelessWidget {
         final name = (data['name'] as String?) ?? listName ?? 'Wishlist';
         final desc = data['description'] as String?;
         final ownerId = data['ownerId'] as String?;
-        final memberIds = (data['memberIds'] as List?)?.cast<String>() ?? const <String>[];
+        final memberIds =
+            (data['memberIds'] as List?)?.cast<String>() ?? const <String>[];
         final isOwner = ownerId == uid;
 
         return Scaffold(
@@ -57,11 +60,12 @@ class WishlistPage extends StatelessWidget {
                     final saved = await showModalBottomSheet<bool>(
                       context: context,
                       isScrollControlled: true,
-                      builder: (_) => WishlistForm(
-                        id: listId,
-                        initialName: name,
-                        initialDescription: desc,
-                      ),
+                      builder:
+                          (_) => WishlistForm(
+                            id: listId,
+                            initialName: name,
+                            initialDescription: desc,
+                          ),
                     );
                     if (saved == true && context.mounted) {
                       ScaffoldMessenger.of(context).showSnackBar(
@@ -84,9 +88,15 @@ class WishlistPage extends StatelessWidget {
               // Meta: owner/member counts
               Row(
                 children: [
-                  _MetaChip(icon: Icons.person, label: isOwner ? 'You are the owner' : 'Owner'),
+                  _MetaChip(
+                    icon: Icons.person,
+                    label: isOwner ? 'You are the owner' : 'Owner',
+                  ),
                   const SizedBox(width: 8),
-                  _MetaChip(icon: Icons.group, label: '${memberIds.length + 1} members'),
+                  _MetaChip(
+                    icon: Icons.group,
+                    label: '${memberIds.length + 1} members',
+                  ),
                 ],
               ),
 
@@ -100,18 +110,21 @@ class WishlistPage extends StatelessWidget {
               const SizedBox(height: 12),
 
               StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-                stream: FirebaseFirestore.instance
-                    .collection('wishlists')
-                    .doc(listId)
-                    .collection('items')
-                    .orderBy('createdAt', descending: true)
-                    .snapshots(),
+                stream:
+                    FirebaseFirestore.instance
+                        .collection('wishlists')
+                        .doc(listId)
+                        .collection('items')
+                        .orderBy('createdAt', descending: true)
+                        .snapshots(),
                 builder: (context, snap) {
                   if (snap.connectionState == ConnectionState.waiting) {
-                    return const Center(child: Padding(
-                      padding: EdgeInsets.symmetric(vertical: 24),
-                      child: CircularProgressIndicator(),
-                    ));
+                    return const Center(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(vertical: 24),
+                        child: CircularProgressIndicator(),
+                      ),
+                    );
                   }
                   if (!snap.hasData || snap.data!.docs.isEmpty) {
                     return Card(
@@ -119,14 +132,18 @@ class WishlistPage extends StatelessWidget {
                       child: ListTile(
                         leading: const Icon(Icons.inventory_2_outlined),
                         title: const Text('No items yet'),
-                        subtitle: const Text('Add items to start building this wishlist.'),
+                        subtitle: const Text(
+                          'Add items to start building this wishlist.',
+                        ),
                         trailing: IconButton(
                           icon: const Icon(Icons.add),
                           onPressed: () {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (_) => AddWishlistItemPage(wishlistId: listId),
+                                builder:
+                                    (_) =>
+                                        AddWishlistItemPage(wishlistId: listId),
                               ),
                             );
                           },
@@ -153,28 +170,42 @@ class WishlistPage extends StatelessWidget {
                       return Card(
                         elevation: 0.5,
                         child: ListTile(
-                          leading: (imageUrl == null || imageUrl.isEmpty)
-                              ? const CircleAvatar(child: Icon(Icons.card_giftcard))
-                              : CircleAvatar(
-                            backgroundImage: NetworkImage(imageUrl),
-                            onBackgroundImageError: (_, __) {},
+                          leading:
+                              (imageUrl == null || imageUrl.isEmpty)
+                                  ? const CircleAvatar(
+                                    child: Icon(Icons.card_giftcard),
+                                  )
+                                  : CircleAvatar(
+                                    backgroundImage: NetworkImage(imageUrl),
+                                    onBackgroundImageError: (_, __) {},
+                                  ),
+                          title: Text(
+                            name,
+                            style: const TextStyle(fontWeight: FontWeight.w600),
                           ),
-                          title: Text(name, style: const TextStyle(fontWeight: FontWeight.w600)),
                           subtitle: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              if (desc != null && desc.trim().isNotEmpty) Text(desc),
+                              if (desc != null && desc.trim().isNotEmpty)
+                                Text(desc),
                               const SizedBox(height: 4),
                               // reservation label — hidden identity: only the reserver sees it
                               if (youReserved)
-                                const Text('You reserved this', style: TextStyle(fontSize: 12, fontStyle: FontStyle.italic)),
+                                const Text(
+                                  'You reserved this',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    fontStyle: FontStyle.italic,
+                                  ),
+                                ),
                             ],
                           ),
-                          trailing: isOwner
-                              ? null // owner controls coming later
-                              : (youReserved
-                              ? const Icon(Icons.check_circle_outline)
-                              : const Icon(Icons.lock_open)),
+                          trailing:
+                              isOwner
+                                  ? null // owner controls coming later
+                                  : (youReserved
+                                      ? const Icon(Icons.check_circle_outline)
+                                      : const Icon(Icons.lock_open)),
                           onTap: () {
                             // TODO: open item details (and reserve/unreserve) in next iteration
                           },

@@ -5,10 +5,10 @@ import 'member_role.dart';
 class WishlistMember {
   final UID userId;
   final MemberRole role;
-  final bool joinedViaLink;     // true if user used a share link
-  final InviteStatus status;    // for lifecycle tracking
-  final UID? invitedBy;         // who invited this user
-  final int joinedAtMs;         // unix ms
+  final bool joinedViaLink; // true if user used a share link
+  final InviteStatus status; // for lifecycle tracking
+  final UID? invitedBy; // who invited this user
+  final int joinedAtMs; // unix ms
   final int? invitedAtMs;
 
   const WishlistMember({

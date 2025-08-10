@@ -2,11 +2,11 @@ import 'ids.dart';
 import 'reservation_status.dart';
 
 class ItemReservation {
-  final UID userId;          // who booked it
-  final int quantity;        // how many reserved
+  final UID userId; // who booked it
+  final int quantity; // how many reserved
   final int reservedAtMs;
-  final int? expiresAtMs;    // optional hold expiration
-  final String? note;        // optional (e.g., size/color taken)
+  final int? expiresAtMs; // optional hold expiration
+  final String? note; // optional (e.g., size/color taken)
   final ReservationStatus status;
 
   const ItemReservation({

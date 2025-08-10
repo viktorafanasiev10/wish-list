@@ -21,7 +21,7 @@ class WishlistListPage extends StatelessWidget {
             tooltip: 'Sign out',
             onPressed: () => FirebaseAuth.instance.signOut(),
             icon: const Icon(Icons.logout),
-          )
+          ),
         ],
       ),
       body: StreamBuilder<List<QueryDocumentSnapshot<Map<String, dynamic>>>>(
@@ -32,7 +32,9 @@ class WishlistListPage extends StatelessWidget {
           }
           final docs = snap.data!;
           if (docs.isEmpty) {
-            return const Center(child: Text('No wishlists yet. Create your first!'));
+            return const Center(
+              child: Text('No wishlists yet. Create your first!'),
+            );
           }
           return ListView.separated(
             padding: const EdgeInsets.all(12),
@@ -48,28 +50,49 @@ class WishlistListPage extends StatelessWidget {
                 elevation: 0.5,
                 child: ListTile(
                   leading: CircleAvatar(child: Text(name[0].toUpperCase())),
-                  title: Text(name, style: const TextStyle(fontWeight: FontWeight.w600)),
+                  title: Text(
+                    name,
+                    style: const TextStyle(fontWeight: FontWeight.w600),
+                  ),
                   subtitle: Text(desc ?? (isOwner ? 'Owner' : 'Member')),
                   onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (_) => WishlistPage(listId: id, listName: name, currentUserEmail: FirebaseAuth.instance.currentUser!.email),
-                    ));
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder:
+                            (_) => WishlistPage(
+                              listId: id,
+                              listName: name,
+                              currentUserEmail:
+                                  FirebaseAuth.instance.currentUser!.email,
+                            ),
+                      ),
+                    );
                   },
-                  trailing: isOwner
-                      ? IconButton(
-                    icon: const Icon(Icons.edit),
-                    onPressed: () async {
-                      final saved = await showModalBottomSheet<bool>(
-                        context: context,
-                        isScrollControlled: true,
-                        builder: (_) => WishlistForm(id: id, initialName: name, initialDescription: desc),
-                      );
-                      if (saved == true && context.mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Wishlist updated')));
-                      }
-                    },
-                  )
-                      : null,
+                  trailing:
+                      isOwner
+                          ? IconButton(
+                            icon: const Icon(Icons.edit),
+                            onPressed: () async {
+                              final saved = await showModalBottomSheet<bool>(
+                                context: context,
+                                isScrollControlled: true,
+                                builder:
+                                    (_) => WishlistForm(
+                                      id: id,
+                                      initialName: name,
+                                      initialDescription: desc,
+                                    ),
+                              );
+                              if (saved == true && context.mounted) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('Wishlist updated'),
+                                  ),
+                                );
+                              }
+                            },
+                          )
+                          : null,
                 ),
               );
             },
@@ -84,7 +107,9 @@ class WishlistListPage extends StatelessWidget {
             builder: (_) => const WishlistForm(),
           );
           if (created == true && context.mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Wishlist created')));
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(const SnackBar(content: Text('Wishlist created')));
           }
         },
         icon: const Icon(Icons.add),

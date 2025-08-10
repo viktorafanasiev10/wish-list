@@ -26,11 +26,12 @@ class WishlistApp extends StatelessWidget {
         if (settings.name == '/wishlist') {
           final args = settings.arguments as Map<String, dynamic>;
           return MaterialPageRoute(
-            builder: (_) => WishlistPage(
-              listId: args['listId'] as String,
-              listName: args['listName'] as String?,
-              currentUserEmail: args['currentUserEmail'] as String?,
-            ),
+            builder:
+                (_) => WishlistPage(
+                  listId: args['listId'] as String,
+                  listName: args['listName'] as String?,
+                  currentUserEmail: args['currentUserEmail'] as String?,
+                ),
           );
         }
         return null;
@@ -48,7 +49,9 @@ class AuthGate extends StatelessWidget {
       stream: FirebaseAuth.instance.authStateChanges(),
       builder: (context, snap) {
         if (snap.connectionState == ConnectionState.waiting) {
-          return const Scaffold(body: Center(child: CircularProgressIndicator()));
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
         }
         if (snap.hasData) {
           return const WishlistListPage();

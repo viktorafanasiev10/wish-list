@@ -15,7 +15,10 @@ class _SignInPageState extends State<SignInPage> {
   bool _loading = false;
 
   Future<void> _signInEmail() async {
-    setState(() { _loading = true; _error = null; });
+    setState(() {
+      _loading = true;
+      _error = null;
+    });
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: _email.text.trim(),
@@ -23,11 +26,16 @@ class _SignInPageState extends State<SignInPage> {
       );
     } on FirebaseAuthException catch (e) {
       setState(() => _error = e.message);
-    } finally { if (mounted) setState(() => _loading = false); }
+    } finally {
+      if (mounted) setState(() => _loading = false);
+    }
   }
 
   Future<void> _registerEmail() async {
-    setState(() { _loading = true; _error = null; });
+    setState(() {
+      _loading = true;
+      _error = null;
+    });
     try {
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: _email.text.trim(),
@@ -35,7 +43,9 @@ class _SignInPageState extends State<SignInPage> {
       );
     } on FirebaseAuthException catch (e) {
       setState(() => _error = e.message);
-    } finally { if (mounted) setState(() => _loading = false); }
+    } finally {
+      if (mounted) setState(() => _loading = false);
+    }
   }
 
   Future<void> _signInWithGoogle() async {
@@ -46,7 +56,7 @@ class _SignInPageState extends State<SignInPage> {
     try {
       // Use the singleton and await initialization
       final googleSignIn = GoogleSignIn.instance;
-      await googleSignIn.signOut();           // clears cached account
+      await googleSignIn.signOut(); // clears cached account
       await googleSignIn.initialize();
 
       // Trigger authentication flow
@@ -77,13 +87,27 @@ class _SignInPageState extends State<SignInPage> {
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            TextField(controller: _email, decoration: const InputDecoration(labelText: 'Email')),
-            TextField(controller: _pass, decoration: const InputDecoration(labelText: 'Password'), obscureText: true),
+            TextField(
+              controller: _email,
+              decoration: const InputDecoration(labelText: 'Email'),
+            ),
+            TextField(
+              controller: _pass,
+              decoration: const InputDecoration(labelText: 'Password'),
+              obscureText: true,
+            ),
             const SizedBox(height: 12),
-            if (_error != null) Text(_error!, style: const TextStyle(color: Colors.red)),
+            if (_error != null)
+              Text(_error!, style: const TextStyle(color: Colors.red)),
             const SizedBox(height: 12),
-            FilledButton(onPressed: _loading ? null : _signInEmail, child: const Text('Sign in')),
-            TextButton(onPressed: _loading ? null : _registerEmail, child: const Text('Create account')),
+            FilledButton(
+              onPressed: _loading ? null : _signInEmail,
+              child: const Text('Sign in'),
+            ),
+            TextButton(
+              onPressed: _loading ? null : _registerEmail,
+              child: const Text('Create account'),
+            ),
             const Divider(height: 32),
             OutlinedButton.icon(
               onPressed: _loading ? null : _signInWithGoogle,

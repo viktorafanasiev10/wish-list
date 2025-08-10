@@ -5,9 +5,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 class WishlistService {
   final _db = FirebaseFirestore.instance;
-  CollectionReference<Map<String, dynamic>> get _col => _db.collection('wishlists');
+  CollectionReference<Map<String, dynamic>> get _col =>
+      _db.collection('wishlists');
 
-  Stream<List<QueryDocumentSnapshot<Map<String, dynamic>>>> myWishlistsStream(String uid) {
+  Stream<List<QueryDocumentSnapshot<Map<String, dynamic>>>> myWishlistsStream(
+    String uid,
+  ) {
     final owned = _col.where('ownerId', isEqualTo: uid).snapshots();
     final member = _col.where('memberIds', arrayContains: uid).snapshots();
 
@@ -43,7 +46,8 @@ class WishlistService {
     final now = FieldValue.serverTimestamp();
     await _col.add({
       'name': name.trim(),
-      'description': (description ?? '').trim().isEmpty ? null : description!.trim(),
+      'description':
+          (description ?? '').trim().isEmpty ? null : description!.trim(),
       'ownerId': uid,
       'memberIds': <String>[],
       'createdAt': now,
@@ -59,7 +63,8 @@ class WishlistService {
   }) async {
     await _col.doc(id).update({
       'name': name.trim(),
-      'description': (description ?? '').trim().isEmpty ? null : description!.trim(),
+      'description':
+          (description ?? '').trim().isEmpty ? null : description!.trim(),
       'updatedAt': FieldValue.serverTimestamp(),
     });
   }
@@ -68,9 +73,13 @@ class WishlistService {
 // tiny helper to merge two streams
 extension _CombineLatest<A> on Stream<QuerySnapshot<Map<String, dynamic>>> {
   Stream<R> combineLatest<B, R>(
-      Stream<QuerySnapshot<Map<String, dynamic>>> other,
-      R Function(QuerySnapshot<Map<String, dynamic>>, QuerySnapshot<Map<String, dynamic>>) combiner,
-      ) {
+    Stream<QuerySnapshot<Map<String, dynamic>>> other,
+    R Function(
+      QuerySnapshot<Map<String, dynamic>>,
+      QuerySnapshot<Map<String, dynamic>>,
+    )
+    combiner,
+  ) {
     late QuerySnapshot<Map<String, dynamic>>? a;
     late QuerySnapshot<Map<String, dynamic>>? b;
     final controller = StreamController<R>();
@@ -79,9 +88,18 @@ extension _CombineLatest<A> on Stream<QuerySnapshot<Map<String, dynamic>>> {
       if (a != null && b != null) controller.add(combiner(a!, b!));
     }
 
-    final sub1 = listen((x) { a = x; tryEmit(); });
-    final sub2 = other.listen((y) { b = y; tryEmit(); });
-    controller.onCancel = () { sub1.cancel(); sub2.cancel(); };
+    final sub1 = listen((x) {
+      a = x;
+      tryEmit();
+    });
+    final sub2 = other.listen((y) {
+      b = y;
+      tryEmit();
+    });
+    controller.onCancel = () {
+      sub1.cancel();
+      sub2.cancel();
+    };
     return controller.stream;
   }
 }

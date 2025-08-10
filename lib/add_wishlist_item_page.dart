@@ -26,13 +26,19 @@ class _AddWishlistItemPageState extends State<AddWishlistItemPage> {
 
   Future<void> _pickImage() async {
     final picker = ImagePicker();
-    final picked = await picker.pickImage(source: ImageSource.gallery, imageQuality: 85);
+    final picked = await picker.pickImage(
+      source: ImageSource.gallery,
+      imageQuality: 85,
+    );
     if (picked != null) {
       setState(() => _picked = picked);
     }
   }
 
-  Future<String?> _uploadImage({required String listId, required String itemId}) async {
+  Future<String?> _uploadImage({
+    required String listId,
+    required String itemId,
+  }) async {
     if (_picked == null) return null;
     final ext = _picked!.name.split('.').last.toLowerCase();
     final path = 'wishlists/$listId/$itemId.$ext';
@@ -45,7 +51,9 @@ class _AddWishlistItemPageState extends State<AddWishlistItemPage> {
 
     task.snapshotEvents.listen((snap) {
       if (snap.totalBytes > 0) {
-        setState(() => _uploadProgress = snap.bytesTransferred / snap.totalBytes);
+        setState(
+          () => _uploadProgress = snap.bytesTransferred / snap.totalBytes,
+        );
       }
     });
 
@@ -56,7 +64,10 @@ class _AddWishlistItemPageState extends State<AddWishlistItemPage> {
   Future<void> _saveItem() async {
     if (!_formKey.currentState!.validate()) return;
 
-    setState(() { _isSaving = true; _uploadProgress = 0; });
+    setState(() {
+      _isSaving = true;
+      _uploadProgress = 0;
+    });
 
     final itemId = const Uuid().v4();
     final user = FirebaseAuth.instance.currentUser;
@@ -73,22 +84,28 @@ class _AddWishlistItemPageState extends State<AddWishlistItemPage> {
           .collection('items')
           .doc(itemId)
           .set({
-        'id': itemId,
-        'name': _nameController.text.trim(),
-        'description': _descController.text.trim().isEmpty ? null : _descController.text.trim(),
-        'url': _productUrlController.text.trim().isEmpty ? null : _productUrlController.text.trim(), // product page
-        'imageUrl': imageUrl, // direct image (may be null)
-        'reservedBy': null,
-        'createdAt': FieldValue.serverTimestamp(),
-        'createdBy': user?.uid,
-      });
+            'id': itemId,
+            'name': _nameController.text.trim(),
+            'description':
+                _descController.text.trim().isEmpty
+                    ? null
+                    : _descController.text.trim(),
+            'url':
+                _productUrlController.text.trim().isEmpty
+                    ? null
+                    : _productUrlController.text.trim(), // product page
+            'imageUrl': imageUrl, // direct image (may be null)
+            'reservedBy': null,
+            'createdAt': FieldValue.serverTimestamp(),
+            'createdBy': user?.uid,
+          });
 
       if (mounted) Navigator.pop(context);
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to save item: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Failed to save item: $e')));
       }
     } finally {
       if (mounted) setState(() => _isSaving = false);
@@ -112,18 +129,25 @@ class _AddWishlistItemPageState extends State<AddWishlistItemPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    width: 96, height: 96,
+                    width: 96,
+                    height: 96,
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(color: Theme.of(context).dividerColor),
                     ),
-                    child: hasImage
-                        ? ClipRRect(
-                      borderRadius: BorderRadius.circular(12),
-                      child: Image.file(File(_picked!.path), width: 96, height: 96, fit: BoxFit.cover),
-                    )
-                        : const Icon(Icons.image, size: 36),
+                    child:
+                        hasImage
+                            ? ClipRRect(
+                              borderRadius: BorderRadius.circular(12),
+                              child: Image.file(
+                                File(_picked!.path),
+                                width: 96,
+                                height: 96,
+                                fit: BoxFit.cover,
+                              ),
+                            )
+                            : const Icon(Icons.image, size: 36),
                   ),
                   const SizedBox(width: 12),
                   Expanded(
@@ -134,10 +158,14 @@ class _AddWishlistItemPageState extends State<AddWishlistItemPage> {
                           icon: const Icon(Icons.upload_file),
                           label: const Text('Upload image'),
                         ),
-                        if (_isSaving && _uploadProgress > 0 && _uploadProgress < 1)
+                        if (_isSaving &&
+                            _uploadProgress > 0 &&
+                            _uploadProgress < 1)
                           Padding(
                             padding: const EdgeInsets.only(top: 8),
-                            child: LinearProgressIndicator(value: _uploadProgress),
+                            child: LinearProgressIndicator(
+                              value: _uploadProgress,
+                            ),
                           ),
                       ],
                     ),
@@ -149,7 +177,8 @@ class _AddWishlistItemPageState extends State<AddWishlistItemPage> {
               TextFormField(
                 controller: _nameController,
                 decoration: const InputDecoration(labelText: 'Item name'),
-                validator: (v) => (v == null || v.trim().isEmpty) ? 'Required' : null,
+                validator:
+                    (v) => (v == null || v.trim().isEmpty) ? 'Required' : null,
               ),
               TextFormField(
                 controller: _descController,
@@ -158,7 +187,9 @@ class _AddWishlistItemPageState extends State<AddWishlistItemPage> {
               ),
               TextFormField(
                 controller: _productUrlController,
-                decoration: const InputDecoration(labelText: 'Product page URL (optional)'),
+                decoration: const InputDecoration(
+                  labelText: 'Product page URL (optional)',
+                ),
                 keyboardType: TextInputType.url,
               ),
 
@@ -166,10 +197,10 @@ class _AddWishlistItemPageState extends State<AddWishlistItemPage> {
               _isSaving
                   ? const CircularProgressIndicator()
                   : FilledButton.icon(
-                onPressed: _saveItem,
-                icon: const Icon(Icons.save),
-                label: const Text('Save item'),
-              ),
+                    onPressed: _saveItem,
+                    icon: const Icon(Icons.save),
+                    label: const Text('Save item'),
+                  ),
             ],
           ),
         ),
