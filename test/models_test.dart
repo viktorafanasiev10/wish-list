@@ -9,6 +9,7 @@ import 'package:wishlist/models/member_role.dart';
 import 'package:wishlist/models/invite_status.dart';
 import 'package:wishlist/models/wishlist.dart';
 import 'package:wishlist/models/wishlist_visibility.dart';
+import 'package:wishlist/models/invitation.dart';
 
 void main() {
   group('Model mapping', () {
@@ -88,6 +89,21 @@ void main() {
       );
       final map = list.toMap();
       final from = Wishlist.fromMap(list.id, map);
+      expect(from.toMap(), equals(map));
+    });
+
+    test('Invitation round trip', () {
+      final invite = Invitation(
+        id: 'inv1',
+        ownerId: 'owner1',
+        email: 'friend@example.com',
+        wishlistId: 'list1',
+        status: InviteStatus.pending,
+        createdAtMs: 1,
+        updatedAtMs: 2,
+      );
+      final map = invite.toMap();
+      final from = Invitation.fromMap(invite.id, map);
       expect(from.toMap(), equals(map));
     });
   });
