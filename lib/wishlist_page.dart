@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 import 'add_wishlist_item_page.dart';
 import 'widgets/wishlist_form.dart';
+import 'widgets/invite_form.dart';
 
 class WishlistPage extends StatelessWidget {
   final String listId;
@@ -219,23 +220,26 @@ class WishlistPage extends StatelessWidget {
                 },
               ),
 
-              const SizedBox(height: 24),
+          if (isOwner) ...[
+            const SizedBox(height: 24),
 
-              // Placeholder for invite/link (coming next)
-              const Text(
-                'Invite',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-              ),
-              const SizedBox(height: 12),
-              OutlinedButton.icon(
-                icon: const Icon(Icons.link),
-                label: const Text('Get invite link'),
-                onPressed: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Invite link — coming soon')),
-                  );
-                },
-              ),
+            const Text(
+              'Invite',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+            ),
+            const SizedBox(height: 12),
+            OutlinedButton.icon(
+              icon: const Icon(Icons.person_add),
+              label: const Text('Invite by email'),
+              onPressed: () {
+                showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  builder: (_) => InviteForm(wishlistId: listId),
+                );
+              },
+            ),
+          ],
             ],
           ),
           floatingActionButton: FloatingActionButton.extended(
