@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -176,7 +177,9 @@ class WishlistPage extends StatelessWidget {
                                     child: Icon(Icons.card_giftcard),
                                   )
                                   : CircleAvatar(
-                                    backgroundImage: NetworkImage(imageUrl),
+                                    backgroundImage: CachedNetworkImageProvider(
+                                      imageUrl,
+                                    ),
                                     onBackgroundImageError: (_, __) {},
                                   ),
                           title: Text(
