@@ -10,6 +10,7 @@ void main() {
       await tester.pumpWidget(const WishlistApp());
       expect(find.byType(CircularProgressIndicator), findsOneWidget);
     },
-    skip: 'Firebase is not initialized for widget tests.',
+    // Firebase isn't initialized in test environment yet.
+    skip: true,
   );
 }
